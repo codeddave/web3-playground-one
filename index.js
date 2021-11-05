@@ -13,5 +13,14 @@ const init = async () => {
   //CALL TRANSACTION
   const result = await contract.methods.getData().call();
   console.log(result);
+
+  //Returns array of all addresses from Ganache
+  const addresses = await web3.eth.getAccounts();
+  await contract.methods.setData(10).send({
+    from: addresses[0],
+  });
+
+  const data = await contract.methods.getData().call();
+  console.log(data);
 };
 init();
