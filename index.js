@@ -16,10 +16,32 @@ const init = async () => {
 
   //Returns array of all addresses from Ganache
   const addresses = await web3.eth.getAccounts();
-  await contract.methods.setData(10).send({
+
+  /*  // async/await syntax
+  const receipt = await contract.methods.setData(10).send({
     from: addresses[0],
   });
+ */
 
+  //promise based syntax
+  /*  contract.methods
+    .setData(20)
+    .send({
+      from: addresses[0],
+    })
+    .then((result) => console.log(result))
+    .catch((error) => console.log(error)); */
+
+  //console.log(receipt);
+
+  contract.methods
+    .setData(60)
+    .send({
+      from: addresses[0],
+    })
+    .on("receipt", (receipt) => {
+      console.log(receipt, "helloooo");
+    });
   const data = await contract.methods.getData().call();
   console.log(data);
 };
