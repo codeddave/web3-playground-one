@@ -59,5 +59,12 @@ const init = async () => {
   });
 
   console.log(await contract.methods.functionCalled().call());
+
+  await web3.eth.sendTransaction({
+    from: addresses[0],
+    to: contract.options.address,
+    value: "10000",
+  });
+  console.log(await contract.methods.functionCalled().call());
 };
 init();
