@@ -1,11 +1,10 @@
 const Web3 = require("web3");
-const MyContract = require("./build/contracts/SecondContract.json");
+const MyContract = require("./build/contracts/EventContract.json");
 
 const init = async () => {
   const web3 = new Web3("http://localhost:9545");
   const id = await web3.eth.net.getId();
   const deployedNetwork = MyContract.networks[id];
-  console.log();
   const contract = new web3.eth.Contract(
     MyContract.abi,
     deployedNetwork.address
@@ -53,7 +52,7 @@ const init = async () => {
   //Wei(a fraction of Ether)
   //web3.utils.toBN('100000')
 
-  await contract.methods.sendEther().send({
+  /*   await contract.methods.sendEther().send({
     from: addresses[0],
     value: "100000",
   });
@@ -71,6 +70,11 @@ const init = async () => {
     from: addresses[0],
     to: addresses[1],
     value: "10000",
+  }); */
+
+  const receipt = await contract.methods.emitEvent("hey").send({
+    from: addresses[0],
   });
+  console.log(receipt.events);
 };
 init();
