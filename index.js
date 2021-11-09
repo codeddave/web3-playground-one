@@ -59,7 +59,7 @@ const init = async () => {
   });
 
   console.log(await contract.methods.functionCalled().call());
-
+  ///wdlvn
   await web3.eth.sendTransaction({
     from: addresses[0],
     to: contract.options.address,
