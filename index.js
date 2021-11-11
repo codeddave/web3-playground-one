@@ -72,9 +72,19 @@ const init = async () => {
     value: "10000",
   }); */
 
-  const receipt = await contract.methods.emitEvent("hey").send({
+  await contract.methods.emitEvent("hey").send({
     from: addresses[0],
   });
-  console.log(receipt.events);
+
+  contract.events
+    .MyEvent({
+      fromBlock: 0,
+    })
+    .on("data", (event) => console.log(event));
+
+  await new Promise((resolve) => setTimeout(() => resolve(), 2000));
+  await contract.methods.emitEvent("hey, hey").send({
+    from: addresses[0],
+  });
 };
 init();
