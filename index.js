@@ -1,8 +1,14 @@
 const Web3 = require("web3");
-const MyContract = require("./build/contracts/EventContract.json");
+const MyContract = require("./build/contracts/MyContract.json");
+
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const address = "0x2743981379FfDeD14C2C86d552B31DEBa12d5273";
+const privateKey =
+  "0x431d4c862c6695058c3c5a40ddd2b58400f4310429a9f9e05a7e4b4f4fbc6866";
 
 const init = async () => {
-  const web3 = new Web3("http://localhost:9545");
+  const provider = new HDWalletProvider(privateKey, "http://localhost:9545");
+  const web3 = new Web3(provider);
   const id = await web3.eth.net.getId();
   const deployedNetwork = MyContract.networks[id];
   const contract = new web3.eth.Contract(
@@ -10,6 +16,14 @@ const init = async () => {
     deployedNetwork.address
   );
   const addresses = await web3.eth.getAccounts();
+
+  await contract.methods.setData(30).send({
+    from: addresses[0],
+  });
+
+  const result = await contract.methods.getData().call();
+
+  console.log(result);
 
   //CALL TRANSACTION
   /*   const result = await contract.methods.getData().call();
@@ -72,7 +86,7 @@ const init = async () => {
     value: "10000",
   }); */
 
-  await contract.methods.emitEvent("hey").send({
+  /* await contract.methods.emitEvent("hey").send({
     from: addresses[0],
   });
 
@@ -85,6 +99,6 @@ const init = async () => {
   await new Promise((resolve) => setTimeout(() => resolve(), 2000));
   await contract.methods.emitEvent("hey, hey").send({
     from: addresses[0],
-  });
+  }); */
 };
 init();
