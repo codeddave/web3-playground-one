@@ -1,4 +1,5 @@
 const Web3 = require("web3");
+require("dotenv").config();
 const MyContract = require("./build/contracts/MyContract.json");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
@@ -7,16 +8,19 @@ const privateKey =
   "0x431d4c862c6695058c3c5a40ddd2b58400f4310429a9f9e05a7e4b4f4fbc6866";
 
 const init = async () => {
-  const provider = new HDWalletProvider(privateKey, "http://localhost:9545");
+  const provider = new HDWalletProvider(privateKey, process.env.ROPSTEN_URL);
   const web3 = new Web3(provider);
-  const id = await web3.eth.net.getId();
-  const deployedNetwork = MyContract.networks[id];
-  const contract = new web3.eth.Contract(
-    MyContract.abi,
-    deployedNetwork.address
-  );
+  //const id = await web3.eth.net.getId();
+  //const deployedNetwork = MyContract.networks[id];
+  let contract = new web3.eth.Contract(MyContract.abi);
   const addresses = await web3.eth.getAccounts();
-
+  contract = await contract
+    .deploy({
+      data: MyContract.bytecode,
+    })
+    .send({
+      from: address,
+    });
   await contract.methods.setData(30).send({
     from: addresses[0],
   });
